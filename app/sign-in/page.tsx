@@ -13,19 +13,28 @@ export default function SignIn() {
     const [name, setName] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
-    const searchParams = useSearchParams();
     const router = useRouter();
-    const callbackUrl = searchParams?.get("callbackUrl") || "/";
-    const errorType = searchParams?.get("error");
+    const searchParams = useSearchParams();
+
+    // Initialize these with default values to prevent hydration issues
+    const [callbackUrl, setCallbackUrl] = useState("/");
+    const [errorType, setErrorType] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    // Check if we're coming from the "Sign Up" button or if there's an error
+    // Safely access search params after component mounts
     useEffect(() => {
-        if (searchParams?.get("isRegister") === "true") {
-            setIsRegistering(true);
-        }
+        if (searchParams) {
+            setCallbackUrl(searchParams.get("callbackUrl") || "/");
+            setErrorType(searchParams.get("error"));
 
-        // Handle error messages
+            if (searchParams.get("isRegister") === "true") {
+                setIsRegistering(true);
+            }
+        }
+    }, [searchParams]);
+
+    // Handle error messages
+    useEffect(() => {
         if (errorType) {
             switch (errorType) {
                 case "CredentialsSignin":
@@ -41,7 +50,7 @@ export default function SignIn() {
                     setError("An error occurred during sign in. Please try again.");
             }
         }
-    }, [searchParams, errorType]);
+    }, [errorType]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
