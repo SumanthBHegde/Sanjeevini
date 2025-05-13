@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
     buildActivity: true,
     buildActivityPosition: "bottom-right",
   },
+  // Add route handler configuration to prevent auth-related pages from being statically generated
+  modularizeImports: {
+    "next-auth/react": {
+      transform: "next-auth/react/{{member}}",
+    },
+  },
 };
 
 export default nextConfig;
