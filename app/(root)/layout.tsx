@@ -1,6 +1,6 @@
-import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/navigation/Navbar";
 import Footer from "@/components/navigation/Footer";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 
 export default function RootLayout({
     children,
@@ -8,12 +8,12 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <SessionProvider>
+        <AuthProvider>
             <Navbar />
             <main className="min-h-screen">
                 {children}
             </main>
             <Footer />
-        </SessionProvider>
+        </AuthProvider>
     )
 }

@@ -10,14 +10,24 @@ import { isHardcodedAdmin } from "@/config/admins";
 
 // Add custom type extensions
 declare module "next-auth" {
+  /**
+   * The shape of the user object returned in the OAuth providers' `profile` callback,
+   * or the second parameter of the `session` callback, when using a database.
+   */
   interface User {
     id?: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
     isAdmin?: boolean;
     role?: string;
+    isHardcodedAdmin?: boolean;
   }
   
+  /**
+   * Returned by `useSession`, `auth`, contains information about the active session.
+   */
   interface Session {
-    id?: string;
     user: {
       id?: string;
       name?: string | null;
@@ -25,16 +35,36 @@ declare module "next-auth" {
       image?: string | null;
       isAdmin?: boolean;
       role?: string;
+      _id?: string;
+      username?: string;
+      pendingEditorRequest?: boolean;
     } & Record<string, any>;
   }
-}
-
-declare module "next-auth/jwt" {
+  
+  /**
+   * Extended Session type with custom id property
+   */
+  interface DefaultSession {
+    id?: string;
+  }
+  
+  /**
+   * The shape of the JWT token stored in the session cookie.
+   */
   interface JWT {
     id?: string;
     isAdmin?: boolean;
     role?: string;
-    user?: Record<string, any>;
+    user?: {
+      _id?: string;
+      name?: string;
+      email?: string;
+      image?: string;
+      isAdmin?: boolean;
+      role?: string;
+      username?: string;
+      pendingEditorRequest?: boolean;
+    } & Record<string, any>;
   }
 }
 
@@ -124,7 +154,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
           
           // Check if this is a hardcoded admin email
-          const isHardcodedAdminCheck = isHardcodedAdmin(credentials.email);
+          const isHardcodedAdminCheck = credentials.email ? isHardcodedAdmin(String(credentials.email)) : false;
           
           // If it's a hardcoded admin but doesn't have admin role in DB, we'll update it later in callbacks
           const isAdminValue = isHardcodedAdminCheck ? true : (user.isAdmin || false);
@@ -224,6 +254,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
     },
     async jwt({ token, user, account, profile }) {
+      // Initialize token with default structure if not already set
+      if (!token.user) {
+        token.user = {};
+      }
+      
       // Add user data to the token when it's first created
       if (user) {
         token.id = user.id;
@@ -234,7 +269,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.role = 'admin';
           
           // If this is a hardcoded admin but doesn't have admin role in DB, update their role
-          if (user.isHardcodedAdmin && user.id) {
+          if ((user as any).isHardcodedAdmin && user.id) {
             try {
               await writeClient
                 .patch(user.id)
@@ -277,7 +312,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (id) {
           try {
-            const user = await client
+            const userData = await client
               .withConfig({ useCdn: false })
               .fetch(
                 `*[_type == "author" && id == $id][0]{
@@ -293,37 +328,40 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 { id }
               );
             
-            if (user) {
-              token.id = user._id || null;
-              token.user = user;
+            if (userData) {
+              token.id = userData._id || null;
+              token.user = userData as Record<string, any>;
               
               // Check if this email is in the hardcoded admin list and override DB values if needed
-              if (user.email && isHardcodedAdmin(user.email)) {
+              if (userData.email && isHardcodedAdmin(userData.email)) {
                 token.isAdmin = true;
                 token.role = 'admin';
-                token.user.isAdmin = true;
-                token.user.role = 'admin';
+                // Make sure token.user is properly typed for TypeScript
+                if (token.user && typeof token.user === 'object') {
+                  (token.user as any).isAdmin = true;
+                  (token.user as any).role = 'admin';
+                }
                 
                 // Update the user in the database if they're not marked as admin
-                if (!user.isAdmin || user.role !== 'admin') {
+                if (!userData.isAdmin || userData.role !== 'admin') {
                   try {
                     await writeClient
-                      .patch(user._id)
+                      .patch(userData._id)
                       .set({
                         role: 'admin',
                         isAdmin: true
                       })
                       .commit();
                       
-                    console.log(`Updated hardcoded admin user: ${user.email}`);
+                    console.log(`Updated hardcoded admin user: ${userData.email}`);
                   } catch (error) {
                     console.error("Error updating hardcoded admin:", error);
                   }
                 }
               } else {
                 // Use the database values
-                token.isAdmin = user.isAdmin || false;
-                token.role = user.role || 'viewer';
+                token.isAdmin = userData.isAdmin || false;
+                token.role = userData.role || 'viewer';
               }
             }
           } catch (error) {
@@ -333,7 +371,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       
       // Final check - if the email in the token is a hardcoded admin, ensure admin privileges
-      if (token?.user?.email && isHardcodedAdmin(token.user.email)) {
+      if (token.user && typeof token.user === 'object' && 'email' in token.user && 
+          token.user.email && isHardcodedAdmin(token.user.email as string)) {
         token.isAdmin = true;
         token.role = 'admin';
       }
@@ -341,20 +380,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }) {
+      // Start with a minimal valid session
+      const newSession = { 
+        ...session,
+        user: { ...session.user }  // Keep existing user data
+      };
+      
+      // Set ID from token if available
       if (token?.id) {
-        session.id = String(token.id);
+        newSession.id = String(token.id);
       }
-      if (token?.user) {
-        session.user = {
-          ...session.user,
-          ...token.user
+      
+      // Merge user data from token if available
+      if (token.user && typeof token.user === 'object') {
+        newSession.user = {
+          ...newSession.user,
+          ...token.user as Record<string, any>
         };
       }
-      // Add role and isAdmin flags to the session
-      session.user.isAdmin = token.isAdmin ?? false;
-      session.user.role = token.role ?? 'viewer';
       
-      return session;
+      // Ensure isAdmin and role are explicitly set
+      newSession.user.isAdmin = (typeof token.isAdmin === 'boolean' ? token.isAdmin : false);
+      newSession.user.role = (typeof token.role === 'string' ? token.role : 'viewer');
+      
+      return newSession;
     },
   },
 });

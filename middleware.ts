@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { auth } from "@/auth";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   
-  // Get the token and verify authentication
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  // Get the session and verify authentication
+  const session = await auth();
   
   const isAdminPath = 
     pathname.startsWith("/admin") || 
@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
   // For admin routes, check if user has admin role
   if (isAdminPath) {
     // Check if user is an admin (either by role or legacy isAdmin flag)
-    const isAdmin = token?.role === 'admin' || token?.isAdmin === true;
+    const isAdmin = session?.user?.role === 'admin' || session?.user?.isAdmin === true;
     
     if (!isAdmin) {
       // Redirect non-admins away from admin pages
@@ -33,7 +33,7 @@ export async function middleware(req: NextRequest) {
   // For content creation/editing routes, check if user has admin or editor role
   if (isEditorPath) {
     // Check if user is an admin or editor
-    const canEdit = token?.role === 'admin' || token?.role === 'editor' || token?.isAdmin === true;
+    const canEdit = session?.user?.role === 'admin' || session?.user?.role === 'editor' || session?.user?.isAdmin === true;
     
     if (!canEdit) {
       // If the user is not an admin or editor, redirect to sign-in with error
@@ -43,7 +43,7 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Allow authenticated requests to proceed
+  // If the code reaches here, the user is authenticated and authorized for the requested path
   return NextResponse.next();
 }
 
