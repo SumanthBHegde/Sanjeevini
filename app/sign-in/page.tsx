@@ -6,9 +6,6 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 
-// Export config to prevent this page from being statically generated
-export const dynamic = 'force-dynamic';
-
 export default function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
