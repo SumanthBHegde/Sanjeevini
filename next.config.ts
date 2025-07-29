@@ -7,6 +7,25 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  webpack: (config, { isServer }) => {
+    // Fix for next-auth v5 beta module resolution issues
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    
+    // Ensure proper module resolution for next-auth
+    config.resolve.extensionAlias = {
+      ...config.resolve.extensionAlias,
+      '.js': ['.ts', '.tsx', '.js', '.jsx'],
+    };
+    
+    return config;
+  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
@@ -29,6 +48,7 @@ const nextConfig: NextConfig = {
     ppr: "incremental",
     after: true,
   },
+  transpilePackages: ['next-auth'],
   devIndicators: {
     appIsrStatus: true,
     buildActivity: true,
