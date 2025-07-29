@@ -2,12 +2,12 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import UserPlants from "@/components/UserPlants";
 import Link from "next/link";
 
-export default function UserPlantsPage() {
+function UserPlantsContent() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
@@ -65,5 +65,13 @@ export default function UserPlantsPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function UserPlantsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <UserPlantsContent />
+        </Suspense>
     );
 }

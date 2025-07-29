@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function RequestEditorPage() {
+function RequestEditorContent() {
     const { data: session, update } = useSession();
     const router = useRouter();
     const [reason, setReason] = useState("");
@@ -171,5 +171,13 @@ export default function RequestEditorPage() {
                 </form>
             )}
         </div>
+    );
+}
+
+export default function RequestEditorPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <RequestEditorContent />
+        </Suspense>
     );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
@@ -14,7 +14,7 @@ interface EditorRequest extends Author {
     editorRequestDate?: string;
 }
 
-export default function EditorRequestsPage() {
+function EditorRequestsContent() {
     const { data: session } = useSession();
     const router = useRouter();
     const [requests, setRequests] = useState<EditorRequest[]>([]);
@@ -93,7 +93,7 @@ export default function EditorRequestsPage() {
             setRequests(prevRequests => prevRequests.filter(req => req._id !== userId));
         } catch (err) {
             console.error("Error approving editor request:", err);
-            setError(err.message || "Failed to approve editor request");
+            setError(err instanceof Error ? err.message : "Failed to approve editor request");
         } finally {
             setProcessingId(null);
         }
@@ -129,7 +129,7 @@ export default function EditorRequestsPage() {
             setRequests(prevRequests => prevRequests.filter(req => req._id !== userId));
         } catch (err) {
             console.error("Error rejecting editor request:", err);
-            setError(err.message || "Failed to reject editor request");
+            setError(err instanceof Error ? err.message : "Failed to reject editor request");
         } finally {
             setProcessingId(null);
         }
@@ -304,5 +304,13 @@ export default function EditorRequestsPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function EditorRequestsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <EditorRequestsContent />
+        </Suspense>
     );
 }

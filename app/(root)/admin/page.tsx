@@ -2,11 +2,11 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 
-export default function AdminDashboardPage() {
+function AdminDashboardContent() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [stats, setStats] = useState({
@@ -176,5 +176,13 @@ export default function AdminDashboardPage() {
                 </Link>
             </div>
         </div>
+    );
+}
+
+export default function AdminDashboardPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <AdminDashboardContent />
+        </Suspense>
     );
 }

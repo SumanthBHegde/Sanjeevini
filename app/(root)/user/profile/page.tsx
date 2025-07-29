@@ -2,10 +2,10 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function ProfileRedirectPage() {
+function ProfileRedirectContent() {
     const { data: session, status } = useSession();
     const router = useRouter();
 
@@ -33,5 +33,13 @@ export default function ProfileRedirectPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function ProfileRedirectPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ProfileRedirectContent />
+        </Suspense>
     );
 }
