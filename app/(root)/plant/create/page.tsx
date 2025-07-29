@@ -2,6 +2,9 @@ import CreatePlantForm from "@/components/forms/CreatePlantForm";
 import CreatePlantHero from "@/components/plants/CreatePlantHero";
 import { Suspense } from "react";
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 export default function CreatePlantPage() {
     return (
         <>

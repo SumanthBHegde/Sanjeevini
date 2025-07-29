@@ -9,36 +9,44 @@ export const createPlant = async (
   state: { error: string; status: string },
   form: FormData,
 ) => {
-  const session = await auth();
-
-  if (!session)
-    return parseServerActionResponse({
-      error: "Not signed in",
-      status: "ERROR",
-    });
-
-  const { 
-    name, 
-    scientificName, 
-    description, 
-    detailedDescription, 
-    category, 
-    region, 
-    mainImage, 
-    medicinalProperties, 
-    cultivationTips, 
-    traditionalUses,
-    conservationStatus
-  } = Object.fromEntries(form);
-
-  const slug = slugify(name as string, { lower: true, strict: true });
-
-  // Process array fields from form data
-  const processMedicinalProperties = medicinalProperties ? (medicinalProperties as string).split('\n').filter(item => item.trim() !== '') : [];
-  const processCultivationTips = cultivationTips ? (cultivationTips as string).split('\n').filter(item => item.trim() !== '') : [];
-  const processTraditionalUses = traditionalUses ? (traditionalUses as string).split('\n').filter(item => item.trim() !== '') : [];
-
   try {
+    // Early return if we're in a build context where auth might not be available
+    if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.VERCEL_URL) {
+      return parseServerActionResponse({
+        error: "Build context - skipping authentication",
+        status: "ERROR",
+      });
+    }
+
+    const session = await auth();
+
+    if (!session)
+      return parseServerActionResponse({
+        error: "Not signed in",
+        status: "ERROR",
+      });
+
+    const { 
+      name, 
+      scientificName, 
+      description, 
+      detailedDescription, 
+      category, 
+      region, 
+      mainImage, 
+      medicinalProperties, 
+      cultivationTips, 
+      traditionalUses,
+      conservationStatus
+    } = Object.fromEntries(form);
+
+    const slug = slugify(name as string, { lower: true, strict: true });
+
+    // Process array fields from form data
+    const processMedicinalProperties = medicinalProperties ? (medicinalProperties as string).split('\n').filter(item => item.trim() !== '') : [];
+    const processCultivationTips = cultivationTips ? (cultivationTips as string).split('\n').filter(item => item.trim() !== '') : [];
+    const processTraditionalUses = traditionalUses ? (traditionalUses as string).split('\n').filter(item => item.trim() !== '') : [];
+
     const plant = {
       name,
       scientificName,

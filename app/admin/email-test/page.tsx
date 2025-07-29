@@ -1,5 +1,8 @@
 import TestEmailComponent from "../../../components/email/TestEmailComponent";
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 export default function TestEmailPage() {
     return (
         <div className="container mx-auto py-10">

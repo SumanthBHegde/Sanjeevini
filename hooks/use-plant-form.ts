@@ -32,9 +32,9 @@ export const usePlantForm = () => {
     status: "",
   });
 
-  // Redirect on successful submission
+  // Redirect on successful submission (only in browser)
   useEffect(() => {
-    if (state.status === "SUCCESS") {
+    if (state.status === "SUCCESS" && typeof window !== 'undefined') {
       router.push("/plants");
     }
   }, [state.status, router]);
