@@ -29,9 +29,11 @@ export default function CreatePlantForm() {
     });
 
     // Redirect on successful submission
-    if (state.status === "SUCCESS") {
-        router.push("/plants");
-    }
+    useEffect(() => {
+        if (state.status === "SUCCESS") {
+            router.push("/plants");
+        }
+    }, [state.status, router]);
 
     // Handle form submission with the detailed markdown description
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
