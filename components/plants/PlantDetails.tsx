@@ -2,7 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 type PlantDetailsProps = {
-    plant: any;
+    plant: {
+        name: string;
+        scientificName?: string;
+        description?: string;
+        uses?: string[];
+        habitat?: string;
+        gallery?: string[];
+        cultivation?: string[];
+        categories?: string[];
+        [key: string]: unknown;
+    };
 };
 
 export default function PlantDetails({ plant }: PlantDetailsProps) {

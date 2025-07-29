@@ -2,6 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
@@ -92,7 +93,7 @@ function SignInContent() {
                         console.error("Sign-in after registration failed:", signInResult.error);
                         // If immediate sign-in fails, try with a delay
                         setTimeout(async () => {
-                            const retryResult = await signIn("credentials", {
+                            await signIn("credentials", {
                                 email,
                                 password,
                                 redirect: true,
@@ -115,13 +116,13 @@ function SignInContent() {
                         // Redirect to home or callback URL
                         router.push(callbackUrl);
                     }
-                } catch (err: any) {
-                    setError(err.message || "Registration failed. Please try again.");
+                } catch {
+                    setError("Registration failed. Please try again.");
                 } finally {
                     setLoadingProvider(null);
                 }
-            } catch (err: any) {
-                setError(err.message || "Registration failed. Please try again.");
+            } catch {
+                setError("Registration failed. Please try again.");
             } finally {
                 setLoadingProvider(null);
             }
@@ -142,7 +143,7 @@ function SignInContent() {
                 } else {
                     router.push(callbackUrl);
                 }
-            } catch (err) {
+            } catch {
                 setError("An error occurred during sign in. Please try again.");
             } finally {
                 setLoadingProvider(null);
@@ -156,7 +157,7 @@ function SignInContent() {
 
         try {
             await signIn(provider, { callbackUrl });
-        } catch (err) {
+        } catch {
             // This error handling may not trigger since signIn redirects the page
             setError(`Failed to sign in with ${provider}. Please try again.`);
         } finally {
@@ -332,7 +333,7 @@ function SignInContent() {
                             </div>
 
                             <div className="mt-4 text-center">
-                                <a
+                                <Link
                                     href="/"
                                     className="inline-flex items-center text-[var(--color-text-body-secondary)] hover:text-[var(--color-bg-accent)] nav-text"
                                 >
@@ -351,7 +352,7 @@ function SignInContent() {
                                         />
                                     </svg>
                                     Return Home
-                                </a>
+                                </Link>
                             </div>
                         </div>
 

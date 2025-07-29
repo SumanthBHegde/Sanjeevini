@@ -1,6 +1,6 @@
 "use client";
 
-import NextError from "next/error";
+import Link from "next/link";
 
 export default function GlobalError({ error }: { error: Error & { digest?: string } }) {
   // Log the error to the console in development
@@ -22,12 +22,12 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
               )}
             </div>
           )}
-          <a
+          <Link
             href="/"
             className="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Return to Home
-          </a>
+          </Link>
         </div>
       </body>
     </html>

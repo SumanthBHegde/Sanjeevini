@@ -82,19 +82,21 @@ export async function POST(request: Request) {
     });
     
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in editor request API:", error);
     
     // Provide a more descriptive error message based on the type of error
     let errorMessage = "Failed to process editor request";
     
-    if (error?.message) {
+    if (error instanceof Error) {
       if (error.message.includes("Cannot connect to Sanity API")) {
         errorMessage = error.message;
       } else if (error.message.includes("ENOTFOUND")) {
         errorMessage = "Cannot reach the Sanity API. Please check your internet connection.";
       } else if (error.message.includes("Unauthorized")) {
         errorMessage = "Authorization error with Sanity. Please contact an administrator.";
+      } else {
+        errorMessage = error.message;
       }
     }
     

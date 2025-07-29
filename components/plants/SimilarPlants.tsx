@@ -1,4 +1,3 @@
-import Link from "next/link";
 import PlantCard from "@/components/plants/PlantCard";
 import { PlantType } from "@/types/plants";
 

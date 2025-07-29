@@ -8,6 +8,7 @@ import { getFallbackPlants } from "@/utils/sanity-connection";
 import { IoWaterOutline } from "react-icons/io5";
 import { FiSun, FiAlertOctagon } from "react-icons/fi";
 import { RiPlantLine } from "react-icons/ri";
+import { PlantType } from "@/types/plants";
 import { TbShovel } from "react-icons/tb";
 
 export default async function CultivationPage() {
@@ -17,7 +18,7 @@ export default async function CultivationPage() {
         getFallbackPlants()
     );
 
-    const cultivablePlants = plants.filter((plant: any) =>
+    const cultivablePlants = plants.filter((plant: PlantType) =>
         plant.cultivationTips && plant.cultivationTips.length > 0
     );
 
@@ -123,7 +124,7 @@ export default async function CultivationPage() {
                         </div>
                     ) : (
                         <div className="card_grid">
-                            {cultivablePlants.map((plant: any) => (
+                            {cultivablePlants.map((plant: PlantType) => (
                                 <PlantCard key={plant._id} plant={plant} />
                             ))}
                         </div>

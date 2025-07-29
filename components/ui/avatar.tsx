@@ -23,7 +23,7 @@ Avatar.displayName = AvatarPrimitive.Root.displayName
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image> & { fallbackDelay?: number }
->(({ className, fallbackDelay = 600, ...props }, ref) => {
+>(({ className, ...props }, ref) => {
   const [isImageError, setIsImageError] = React.useState(false)
 
   // Handle image load errors (including timeouts)

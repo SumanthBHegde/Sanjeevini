@@ -28,7 +28,7 @@ export default function HeroSection({ query }: HeroSectionProps) {
 
                 {/* Main Heading */}
                 <h1 className="heading text-white mb-5 tracking-tight">
-                    NATURE'S BACKPACK
+                    NATURE&apos;S BACKPACK
                 </h1>
 
                 {/* Subtitle */}

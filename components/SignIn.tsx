@@ -2,12 +2,11 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const SignIn = () => {
     const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const router = useRouter();
 
     const handleSignIn = async (provider: string) => {
         try {
@@ -72,9 +71,11 @@ const SignIn = () => {
                         aria-busy={loadingProvider === "google"}
                         aria-label="Sign in with Google"
                     >
-                        <img
+                        <Image
                             src="/google-icon.svg"
                             alt="Google"
+                            width={20}
+                            height={20}
                             className="w-5 h-5"
                         />
                         <span className="nav-text text-text-primary">

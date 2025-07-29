@@ -7,6 +7,7 @@ import { withSanityErrorHandling } from "@/sanity/env";
 import { getFallbackPlants, testSanityConnection } from "@/utils/sanity-connection";
 import Image from "next/image";
 import { FileText } from "lucide-react";
+import { PlantType } from "@/types/plants";
 
 export default async function PlantsPage({
     searchParams,
@@ -34,7 +35,7 @@ export default async function PlantsPage({
 
     // Filter plants by search query if provided
     const filteredPlants = queryString
-        ? plants.filter((plant: any) =>
+        ? plants.filter((plant: PlantType) =>
             plant.name?.toLowerCase().includes(queryString.toLowerCase()) ||
             plant.scientificName?.toLowerCase().includes(queryString.toLowerCase()) ||
             plant.description?.toLowerCase().includes(queryString.toLowerCase())
@@ -119,7 +120,7 @@ export default async function PlantsPage({
                         </div>
                     ) : (
                         <div className="card_grid">
-                            {filteredPlants.map((plant: any) => (
+                            {filteredPlants.map((plant: PlantType) => (
                                 <PlantCard key={plant._id} plant={plant} />
                             ))}
                         </div>

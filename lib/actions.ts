@@ -6,7 +6,7 @@ import slugify from "slugify";
 import { writeClient } from "@/sanity/lib/write-client";
 
 export const createPlant = async (
-  state: any,
+  state: { error: string; status: string },
   form: FormData,
 ) => {
   const session = await auth();

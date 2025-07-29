@@ -24,9 +24,8 @@ export default async function Home({
     const connectionTest = await testSanityConnection();
     let plants = [];
 
-    // Fetch session using getServerSession
-    const session = await auth();
-    const userId = session?.user?.id;
+    // Fetch session for future use if needed
+    await auth();
 
     if (connectionTest.success) {
       // Connection successful, fetch plants from Sanity
@@ -80,7 +79,7 @@ export default async function Home({
             <h3 className="font-medium mb-2">Troubleshooting tips:</h3>
             <ul className="list-disc pl-6 space-y-1">
               <li>Check your internet connection</li>
-              <li>Ensure your firewall isn't blocking the connection</li>
+              <li>Ensure your firewall isn&apos;t blocking the connection</li>
               <li>Try refreshing the page</li>
               <li>If problems persist, it might be a temporary service outage</li>
             </ul>

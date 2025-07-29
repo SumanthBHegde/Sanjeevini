@@ -124,8 +124,8 @@ function RequestEditorContent() {
         <div className="section_container py-10">
             <h1 className="heading-lg mb-4">Request Editor Privileges</h1>
             <p className="body-lg mb-6">
-                As an editor, you'll be able to create and edit plant information on Sanjeevini.
-                Please tell us why you'd like to become an editor and what expertise you can bring.
+                As an editor, you&apos;ll be able to create and edit plant information on Sanjeevini.
+                Please tell us why you&apos;d like to become an editor and what expertise you can bring.
             </p>
 
             {success ? (

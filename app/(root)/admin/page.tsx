@@ -164,7 +164,7 @@ function AdminDashboardContent() {
                             </svg>
                         </div>
                         <h3 className="font-semibold mb-2">Email Test</h3>
-                        <p className="text-sm text-gray-600">Test the email notification system to ensure it's working properly.</p>
+                        <p className="text-sm text-gray-600">Test the email notification system to ensure it&apos;s working properly.</p>
                     </div>
                 </Link>
             </div>

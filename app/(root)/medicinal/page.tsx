@@ -6,6 +6,7 @@ import Image from "next/image";
 import { withSanityErrorHandling } from "@/sanity/env";
 import { getFallbackPlants } from "@/utils/sanity-connection";
 import { GiMedicines } from "react-icons/gi";
+import { PlantType } from "@/types/plants";
 
 export default async function MedicinalPage() {
     // Fetch plants that have medicinal properties with error handling
@@ -14,7 +15,7 @@ export default async function MedicinalPage() {
         getFallbackPlants()
     );
 
-    const medicinalPlants = allPlants.filter((plant: any) =>
+    const medicinalPlants = allPlants.filter((plant: PlantType) =>
         plant.medicinalProperties && plant.medicinalProperties.length > 0
     );
 
@@ -87,7 +88,7 @@ export default async function MedicinalPage() {
                         </div>
                     ) : (
                         <div className="card_grid">
-                            {medicinalPlants.map((plant: any) => (
+                            {medicinalPlants.map((plant: PlantType) => (
                                 <PlantCard key={plant._id} plant={plant} />
                             ))}
                         </div>

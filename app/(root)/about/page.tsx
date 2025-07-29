@@ -70,7 +70,7 @@ export default function AboutPage() {
                         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden p-8">
                             <h3 className="text-xl font-bold mb-4 text-[var(--color-bg-accent)] text-center">Remarkable Biodiversity</h3>
                             <p className="text-base text-gray-700 mb-4">
-                                The Western Ghats, a UNESCO World Heritage site, is one of the world's eight "hottest hotspots" of biological diversity. Stretching along the western coast of India, this ancient mountain range is home to over 7,402 species of flowering plants, 1,814 species of non-flowering plants, 139 mammal species, 508 bird species, and countless other life forms.
+                                The Western Ghats, a UNESCO World Heritage site, is one of the world&apos;s eight &quot;hottest hotspots&quot; of biological diversity. Stretching along the western coast of India, this ancient mountain range is home to over 7,402 species of flowering plants, 1,814 species of non-flowering plants, 139 mammal species, 508 bird species, and countless other life forms.
                             </p>
                             <p className="text-base text-gray-700">
                                 Remarkably, about 325 globally threatened species occur in the Western Ghats. The region shows exceptionally high levels of endemism with approximately 2,253 endemic plant species.

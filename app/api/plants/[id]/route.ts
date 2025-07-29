@@ -41,14 +41,16 @@ export async function DELETE(
       { success: true, message: "Plant deleted successfully" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error deleting plant:", error);
+    
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     
     return NextResponse.json(
       { 
         success: false, 
         message: "Failed to delete plant", 
-        error: error.message || "Unknown error" 
+        error: errorMessage || "Unknown error" 
       },
       { status: 500 }
     );

@@ -45,7 +45,7 @@ export default function TestEmailComponent() {
                     variant: 'destructive',
                 });
             }
-        } catch (error) {
+        } catch {
             toast({
                 title: 'Failed to send email',
                 description: 'Check your SMTP configuration',
