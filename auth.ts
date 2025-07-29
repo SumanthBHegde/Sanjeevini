@@ -14,10 +14,10 @@ declare module "next-auth" {
     id?: string;
     isAdmin?: boolean;
     role?: string;
+    isHardcodedAdmin?: boolean;
   }
   
   interface Session {
-    id?: string;
     user: {
       id?: string;
       name?: string | null;
@@ -124,7 +124,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
           
           // Check if this is a hardcoded admin email
-          const isHardcodedAdminCheck = isHardcodedAdmin(credentials.email);
+          const isHardcodedAdminCheck = isHardcodedAdmin(credentials.email as string);
           
           // If it's a hardcoded admin but doesn't have admin role in DB, we'll update it later in callbacks
           const isAdminValue = isHardcodedAdminCheck ? true : (user.isAdmin || false);
@@ -234,7 +234,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.role = 'admin';
           
           // If this is a hardcoded admin but doesn't have admin role in DB, update their role
-          if (user.isHardcodedAdmin && user.id) {
+          if ((user as any).isHardcodedAdmin && user.id) {
             try {
               await writeClient
                 .patch(user.id)
@@ -301,8 +301,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               if (user.email && isHardcodedAdmin(user.email)) {
                 token.isAdmin = true;
                 token.role = 'admin';
-                token.user.isAdmin = true;
-                token.user.role = 'admin';
+                if (token.user) {
+                  token.user.isAdmin = true;
+                  token.user.role = 'admin';
+                }
                 
                 // Update the user in the database if they're not marked as admin
                 if (!user.isAdmin || user.role !== 'admin') {
@@ -342,7 +344,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
       if (token?.id) {
-        session.id = String(token.id);
+        session.user.id = String(token.id);
       }
       if (token?.user) {
         session.user = {

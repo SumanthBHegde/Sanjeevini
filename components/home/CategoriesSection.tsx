@@ -8,7 +8,9 @@ export default function CategoriesSection() {
             href: "/category/medicinal",
             icon: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 2s.5 2.25.5 3.5a4.94 4.94 0 0 1-5 5c-1.25 0-3.5-.5-3.5-.5s-.5 2.25-.5 3.5a4.94 4.94 0 0 0 5 5c1.25 0 3.5-.5 3.5-.5s.5 2.25.5 3.5a4.94 4.94 0 0 1-5 5c-1.25 0-3.5-.5-3.5-.5"></path>
+                    <path d="M12 2v20" />
+                    <path d="M5 9h14" />
+                    <circle cx="12" cy="12" r="8" />
                 </svg>
             )
         },
@@ -40,10 +42,9 @@ export default function CategoriesSection() {
             href: "/category/endangered",
             icon: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 12h.01"></path>
-                    <path d="M15 12h.01"></path>
-                    <path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"></path>
-                    <path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"></path>
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
                 </svg>
             )
         }
