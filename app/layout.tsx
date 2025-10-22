@@ -11,8 +11,9 @@ export const metadata: Metadata = {
   title: 'Sanjeevini - Western Ghats Medicinal Plants',
   description: 'Discover traditional plants of Western Ghats - cultivation tips & medicinal properties',
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
+    icon: '/sanjeevini-favicon.png',
+    shortcut: '/sanjeevini-favicon.png',
+    apple: '/sanjeevini-favicon.png',
   },
 }
 
@@ -24,22 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <style>
-          {`
-            link[rel="icon"] {
-              border-radius: 50%;
-              overflow: hidden;
-            }
-            /* Ensure the favicon appears circular in browser tabs */
-            @media (prefers-color-scheme: light) {
-              :root {
-                -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50'/%3E%3C/svg%3E");
-                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50'/%3E%3C/svg%3E");
-              }
-            }
-          `}
-        </style>
+        <link rel="icon" href="/sanjeevini-favicon.png" type="image/png" />
       </head>
       <body className={inter.className}>
         <AuthProvider>
