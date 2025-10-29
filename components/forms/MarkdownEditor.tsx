@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // Import the markdown editor dynamically to prevent SSR issues
 const SimpleMdeEditor = dynamic(() => import("react-simplemde-editor"), {
@@ -34,6 +34,11 @@ export const MarkdownEditor = ({
         setIsClient(true);
     }, []);
 
+    // Memoize the onChange handler to prevent re-renders
+    const handleChange = useCallback((newValue: string) => {
+        onChange(newValue);
+    }, [onChange]);
+
     if (!isClient) {
         return (
             <div>
@@ -57,17 +62,12 @@ export const MarkdownEditor = ({
             <div className="border border-gray-300 rounded-md overflow-hidden">
                 <SimpleMdeEditor
                     value={value}
-                    onChange={onChange}
+                    onChange={handleChange}
                     options={{
                         placeholder,
-                        spellChecker: true,
+                        spellChecker: false,
                         autofocus: false,
-                        status: ["lines", "words", "cursor"],
-                        autosave: {
-                            enabled: true,
-                            delay: 1000,
-                            uniqueId: "plantDetailedDescription"
-                        },
+                        status: false,
                         toolbar: [
                             "bold", "italic", "heading", "|",
                             "quote", "unordered-list", "ordered-list", "|",

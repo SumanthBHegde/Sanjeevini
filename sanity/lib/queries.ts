@@ -7,6 +7,7 @@ export const PLANTS_QUERY = defineQuery(`*[_type == "plant" && defined(slug.curr
   scientificName,
   slug,
   _createdAt,
+  publishedAt,
   author -> {
     _id, name, expertise, image
   }, 
@@ -26,11 +27,13 @@ export const PLANT_QUERY = defineQuery(`*[_type == "plant" && slug.current == $s
   scientificName,
   slug,
   _createdAt,
+  publishedAt,
   author -> {
     _id, name, expertise, image
   },
   likes,
   description,
+  detailedDescription,
   category,
   region,
   mainImage,
@@ -47,6 +50,7 @@ export const SEARCH_PLANTS_QUERY = defineQuery(`*[_type == "plant" && defined(sl
   scientificName,
   slug,
   _createdAt,
+  publishedAt,
   author -> {
     _id, name, expertise, image
   }, 
@@ -66,6 +70,7 @@ export const SIMILAR_PLANTS_QUERY = defineQuery(`*[_type == "plant" && category 
   scientificName,
   slug,
   _createdAt,
+  publishedAt,
   author -> {
     _id, name, image
   },
@@ -117,6 +122,7 @@ export const PLANTS_BY_AUTHOR_QUERY = defineQuery(`*[_type == "plant" && author.
   scientificName,
   slug,
   _createdAt,
+  publishedAt,
   author -> {
     _id, name, image, expertise
   }, 

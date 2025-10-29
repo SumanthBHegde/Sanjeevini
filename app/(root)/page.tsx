@@ -33,16 +33,23 @@ export default async function Home({
         async () => {
           if (query) {
             return await client.fetch(
-              `*[_type == "plant" && (name match $queryString || scientificName match $queryString || description match $queryString)]{
+              `*[_type == "plant" && (name match $queryString || scientificName match $queryString || description match $queryString)] | order(_createdAt desc) {
                 _id,
                 name,
                 scientificName,
                 slug,
                 description,
                 publishedAt,
+                _createdAt,
+                category,
+                region,
+                mainImage,
                 medicinalProperties,
                 cultivationTips,
-                "image": mainImage.asset->url
+                author -> {
+                  _id, name, expertise, image
+                },
+                likes
               }`,
               { queryString: `*${query}*` }
             );
