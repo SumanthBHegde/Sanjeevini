@@ -86,6 +86,8 @@ export const AUTHOR_BY_GITHUB_ID_QUERY = defineQuery(`
     bio,
     expertise,
     isAdmin,
+    role,
+    pendingEditorRequest,
     pendingApproval,
     createdAt
 }
@@ -102,6 +104,8 @@ export const AUTHOR_BY_ID_QUERY = defineQuery(`
     bio,
     expertise,
     isAdmin,
+    role,
+    pendingEditorRequest,
     pendingApproval,
     createdAt
 }

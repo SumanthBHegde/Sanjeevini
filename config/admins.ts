@@ -12,13 +12,16 @@
  */
 export const ADMIN_EMAILS: string[] = (() => {
   const adminEmailsEnv = process.env.ADMIN_EMAILS || '';
+  console.log('[AdminConfig] Raw ADMIN_EMAILS env:', adminEmailsEnv ? 'Set' : 'Not set');
   if (!adminEmailsEnv) {
     console.warn('ADMIN_EMAILS environment variable not set. No hardcoded admins will be configured.');
     return [];
   }
   
   // Split by comma and trim whitespace from each email
-  return adminEmailsEnv.split(',').map(email => email.trim()).filter(Boolean);
+  const emails = adminEmailsEnv.split(',').map(email => email.trim()).filter(Boolean);
+  console.log('[AdminConfig] Parsed admin emails count:', emails.length);
+  return emails;
 })();
 
 /**
@@ -27,11 +30,17 @@ export const ADMIN_EMAILS: string[] = (() => {
  * @returns Boolean indicating if the email belongs to a hardcoded admin
  */
 export function isHardcodedAdmin(email: string): boolean {
-  if (!email) return false;
+  if (!email) {
+    console.log('[AdminCheck] No email provided');
+    return false;
+  }
   
   // Case-insensitive check
   const normalizedEmail = email.toLowerCase().trim();
-  return ADMIN_EMAILS.some(adminEmail => 
+  const isAdmin = ADMIN_EMAILS.some(adminEmail => 
     adminEmail.toLowerCase() === normalizedEmail
   );
+  
+  console.log('[AdminCheck] Checking email:', normalizedEmail, '| Is admin:', isAdmin);
+  return isAdmin;
 }

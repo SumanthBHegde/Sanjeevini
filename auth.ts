@@ -176,16 +176,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       try {
+        console.log("[SignIn] Starting OAuth sign-in for provider:", account?.provider);
+        console.log("[SignIn] User email:", user.email);
+        console.log("[SignIn] Profile ID:", id);
+        
         // Check if user exists in Sanity
         const existingUser = await client
           .withConfig({ useCdn: false })
           .fetch(AUTHOR_BY_GITHUB_ID_QUERY, { id });
-          
+        
+        console.log("[SignIn] Existing user found:", !!existingUser);
+        
         // Check if email is in hardcoded admin list
         const isEmailAdmin = user.email ? isHardcodedAdmin(user.email) : false;
+        console.log("[SignIn] Is email admin:", isEmailAdmin);
+        console.log("[SignIn] Admin emails configured:", process.env.ADMIN_EMAILS ? "Yes" : "No");
 
         // Create user if they don't exist
         if (!existingUser) {
+          console.log("[SignIn] Creating new user in Sanity");
           await writeClient.create({
             _type: "author",
             id,
@@ -205,9 +214,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             // Track registration date
             createdAt: new Date().toISOString(),
           });
+          console.log("[SignIn] User created successfully");
         } 
         // If user exists but the email is in the hardcoded admin list, ensure they have admin privileges
         else if (isEmailAdmin && (!existingUser.isAdmin || existingUser.role !== 'admin')) {
+          console.log("[SignIn] Updating existing user to admin");
           await writeClient
             .patch(existingUser._id)
             .set({
@@ -215,12 +226,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               isAdmin: true
             })
             .commit();
+          console.log("[SignIn] User updated to admin successfully");
         }
         
+        console.log("[SignIn] Sign-in successful");
         return true;
       } catch (error) {
-        console.error("Error during OAuth sign-in:", error);
-        return false;
+        console.error("[SignIn] ERROR during OAuth sign-in:", error);
+        console.error("[SignIn] Error details:", {
+          message: error instanceof Error ? error.message : 'Unknown error',
+          stack: error instanceof Error ? error.stack : undefined,
+          provider: account?.provider,
+          userEmail: user.email
+        });
+        // Return true to allow sign-in even if Sanity operations fail
+        // The user will still be authenticated, just might not have proper role assignment
+        console.warn("[SignIn] Allowing sign-in to proceed despite error");
+        return true;
       }
     },
     async jwt({ token, user, account, profile }) {
