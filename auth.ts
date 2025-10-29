@@ -90,13 +90,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          console.log("Missing credentials");
           return null;
         }
         
         try {
-          console.log("Attempting to authorize with email:", credentials.email);
-          
           // Find user in Sanity database
           const user = await client.fetch(
             `*[_type == "author" && email == $email][0]{
@@ -111,10 +108,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             { email: credentials.email }
           );
           
-          console.log("User found:", user ? "Yes" : "No");
-          
           if (!user || !user.password) {
-            console.log("User not found or password missing");
             return null;
           }
           
@@ -125,7 +119,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           
           // Compare the hashed passwords
           const passwordMatch = hashedInputPassword === user.password;
-          console.log("Password match:", passwordMatch);
           
           if (!passwordMatch) {
             return null;
@@ -137,8 +130,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           // If it's a hardcoded admin but doesn't have admin role in DB, we'll update it later in callbacks
           const isAdminValue = isHardcodedAdminCheck ? true : (user.isAdmin || false);
           const roleValue = isHardcodedAdminCheck ? 'admin' : (user.role || 'viewer');
-          
-          console.log("Authentication successful for:", user.email);
           
           return {
             id: user._id,
@@ -170,19 +161,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const isOnAdmin = nextUrl.pathname.startsWith("/admin");
       const isOnEditor = nextUrl.pathname.startsWith("/plant/create") || nextUrl.pathname.startsWith("/plant/edit");
       
-      console.log('[Authorized] Path:', nextUrl.pathname);
-      console.log('[Authorized] Is logged in:', isLoggedIn);
-      console.log('[Authorized] User:', auth?.user);
-      
       if (isOnAdmin) {
         const isAdmin = auth?.user?.role === 'admin' || auth?.user?.isAdmin === true;
-        console.log('[Authorized] Admin check - isAdmin:', isAdmin);
         return isAdmin;
       }
       
       if (isOnEditor) {
         const canEdit = auth?.user?.role === 'admin' || auth?.user?.role === 'editor' || auth?.user?.isAdmin === true;
-        console.log('[Authorized] Editor check - canEdit:', canEdit);
         return canEdit;
       }
       
@@ -207,25 +192,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       try {
-        console.log("[SignIn] Starting OAuth sign-in for provider:", account?.provider);
-        console.log("[SignIn] User email:", user.email);
-        console.log("[SignIn] Profile ID:", id);
-        
         // Check if user exists in Sanity
         const existingUser = await client
           .withConfig({ useCdn: false })
           .fetch(AUTHOR_BY_GITHUB_ID_QUERY, { id });
         
-        console.log("[SignIn] Existing user found:", !!existingUser);
-        
         // Check if email is in hardcoded admin list
         const isEmailAdmin = user.email ? isHardcodedAdmin(user.email) : false;
-        console.log("[SignIn] Is email admin:", isEmailAdmin);
-        console.log("[SignIn] Admin emails configured:", process.env.ADMIN_EMAILS ? "Yes" : "No");
 
         // Create user if they don't exist
         if (!existingUser) {
-          console.log("[SignIn] Creating new user in Sanity");
           await writeClient.create({
             _type: "author",
             id,
@@ -240,16 +216,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               account?.provider === "github"
                 ? profile?.bio || "GitHub bio unavailable"
                 : "Google bio unavailable",
-            role: isEmailAdmin ? 'admin' : 'viewer', // Set role based on hardcoded admin list
-            isAdmin: isEmailAdmin, // Set isAdmin based on hardcoded admin list
-            // Track registration date
+            role: isEmailAdmin ? 'admin' : 'viewer',
+            isAdmin: isEmailAdmin,
             createdAt: new Date().toISOString(),
           });
-          console.log("[SignIn] User created successfully");
         } 
         // If user exists but the email is in the hardcoded admin list, ensure they have admin privileges
         else if (isEmailAdmin && (!existingUser.isAdmin || existingUser.role !== 'admin')) {
-          console.log("[SignIn] Updating existing user to admin");
           await writeClient
             .patch(existingUser._id)
             .set({
@@ -257,22 +230,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               isAdmin: true
             })
             .commit();
-          console.log("[SignIn] User updated to admin successfully");
         }
         
-        console.log("[SignIn] Sign-in successful");
         return true;
       } catch (error) {
         console.error("[SignIn] ERROR during OAuth sign-in:", error);
-        console.error("[SignIn] Error details:", {
-          message: error instanceof Error ? error.message : 'Unknown error',
-          stack: error instanceof Error ? error.stack : undefined,
-          provider: account?.provider,
-          userEmail: user.email
-        });
         // Return true to allow sign-in even if Sanity operations fail
-        // The user will still be authenticated, just might not have proper role assignment
-        console.warn("[SignIn] Allowing sign-in to proceed despite error");
         return true;
       }
     },
@@ -296,8 +259,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                   isAdmin: true
                 })
                 .commit();
-                
-              console.log(`Updated hardcoded admin user: ${user.email}`);
             } catch (error) {
               console.error("Error updating hardcoded admin:", error);
             }
@@ -369,8 +330,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                         isAdmin: true
                       })
                       .commit();
-                      
-                    console.log(`Updated hardcoded admin user: ${user.email}`);
                   } catch (error) {
                     console.error("Error updating hardcoded admin:", error);
                   }
@@ -401,13 +360,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token.role === undefined) {
         token.role = 'viewer';
       }
-      
-      console.log('[JWT] Final token state:', {
-        hasUser: !!token.user,
-        email: (token.user as any)?.email,
-        role: token.role,
-        isAdmin: token.isAdmin
-      });
       
       return token;
     },

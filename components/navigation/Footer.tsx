@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FaFacebook, FaInstagram, FaTwitter, FaGithub } from "react-icons/fa";
+import { FaLinkedin, FaInstagram, FaTwitter, FaGithub } from "react-icons/fa";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -121,28 +121,36 @@ export default function Footer() {
                         </h4>
                         <div className="flex gap-4 mb-6">
                             <Link
-                                href="#"
+                                href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="text-white/80 hover:text-white hover:scale-110 transition-all duration-200"
-                                aria-label="Facebook"
+                                aria-label="LinkedIn"
                             >
-                                <FaFacebook size={24} />
+                                <FaLinkedin size={24} />
                             </Link>
                             <Link
-                                href="#"
+                                href="https://www.instagram.com/sumanth_hutgar"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="text-white/80 hover:text-white hover:scale-110 transition-all duration-200"
                                 aria-label="Instagram"
                             >
                                 <FaInstagram size={24} />
                             </Link>
                             <Link
-                                href="#"
+                                href="https://x.com/Hebhsum?t=TN0xr21VuxgXsKCFCQDnvw&s=09"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="text-white/80 hover:text-white hover:scale-110 transition-all duration-200"
-                                aria-label="Twitter"
+                                aria-label="Twitter/X"
                             >
                                 <FaTwitter size={24} />
                             </Link>
                             <Link
-                                href="#"
+                                href="https://github.com/SumanthBHegde"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="text-white/80 hover:text-white hover:scale-110 transition-all duration-200"
                                 aria-label="GitHub"
                             >
