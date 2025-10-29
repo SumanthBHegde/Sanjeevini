@@ -362,6 +362,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.role = 'admin';
       }
       
+      // Ensure isAdmin and role are always set (default to false/viewer if not set)
+      // This is crucial for middleware token checks
+      if (token.isAdmin === undefined) {
+        token.isAdmin = false;
+      }
+      if (token.role === undefined) {
+        token.role = 'viewer';
+      }
+      
+      console.log('[JWT] Final token state:', {
+        hasUser: !!token.user,
+        email: token.user?.email,
+        role: token.role,
+        isAdmin: token.isAdmin
+      });
+      
       return token;
     },
     async session({ session, token }) {
