@@ -133,16 +133,27 @@ export default async function PlantDetails({ plant }: PlantDetailsProps) {
                 )}
 
                 {/* Call to Action */}
-                <div className="bg-white rounded-lg p-10 shadow-sm border border-[var(--color-card-stroke-primary)] text-center">
-                    <h3 className="section-title mb-4">Share Your Knowledge</h3>
-                    <p className="body-text-secondary mb-6 max-w-2xl mx-auto">
-                        Have additional information about {plant.name}? Help us preserve plant knowledge by becoming a contributor.
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-10 shadow-sm border-2 border-green-200 text-center">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-[var(--color-bg-accent)] rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">Contribute Your Knowledge</h3>
+                    <p className="body-text-secondary mb-6 max-w-2xl mx-auto text-gray-700">
+                        Have additional information about {plant.name}? Join our community of plant experts and help preserve valuable botanical knowledge.
                     </p>
                     <Link
                         href="/user/request-editor"
-                        className="button-primary inline-block"
+                        className="inline-flex items-center gap-2 bg-[var(--color-bg-accent)] text-white px-8 py-3 rounded-lg hover:opacity-90 transition-opacity font-semibold shadow-md hover:shadow-lg"
                     >
-                        Request Editor Access
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <line x1="19" y1="8" x2="19" y2="14"/>
+                            <line x1="22" y1="11" x2="16" y2="11"/>
+                        </svg>
+                        Become a Contributor
                     </Link>
                 </div>
             </div>
