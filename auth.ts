@@ -34,7 +34,15 @@ declare module "next-auth/jwt" {
     id?: string;
     isAdmin?: boolean;
     role?: string;
-    user?: Record<string, any>;
+    user?: {
+      _id?: string;
+      name?: string;
+      email?: string;
+      image?: string;
+      isAdmin?: boolean;
+      role?: string;
+      [key: string]: any;
+    };
   }
 }
 
@@ -157,6 +165,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isOnAdmin = nextUrl.pathname.startsWith("/admin");
+      const isOnEditor = nextUrl.pathname.startsWith("/plant/create") || nextUrl.pathname.startsWith("/plant/edit");
+      
+      console.log('[Authorized] Path:', nextUrl.pathname);
+      console.log('[Authorized] Is logged in:', isLoggedIn);
+      console.log('[Authorized] User:', auth?.user);
+      
+      if (isOnAdmin) {
+        const isAdmin = auth?.user?.role === 'admin' || auth?.user?.isAdmin === true;
+        console.log('[Authorized] Admin check - isAdmin:', isAdmin);
+        return isAdmin;
+      }
+      
+      if (isOnEditor) {
+        const canEdit = auth?.user?.role === 'admin' || auth?.user?.role === 'editor' || auth?.user?.isAdmin === true;
+        console.log('[Authorized] Editor check - canEdit:', canEdit);
+        return canEdit;
+      }
+      
+      return true; // Allow all other pages
+    },
     async signIn({ user, account, profile }) {
       // Allow credential sign-in if user was returned from authorize
       if (account?.provider === "credentials") {
@@ -317,15 +348,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             
             if (user) {
               token.id = user._id || null;
-              token.user = user;
+              token.user = user as any;
               
               // Check if this email is in the hardcoded admin list and override DB values if needed
               if (user.email && isHardcodedAdmin(user.email)) {
                 token.isAdmin = true;
                 token.role = 'admin';
                 if (token.user) {
-                  token.user.isAdmin = true;
-                  token.user.role = 'admin';
+                  (token.user as any).isAdmin = true;
+                  (token.user as any).role = 'admin';
                 }
                 
                 // Update the user in the database if they're not marked as admin
@@ -357,7 +388,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       
       // Final check - if the email in the token is a hardcoded admin, ensure admin privileges
-      if (token?.user?.email && isHardcodedAdmin(token.user.email)) {
+      if (token?.user && (token.user as any).email && isHardcodedAdmin((token.user as any).email)) {
         token.isAdmin = true;
         token.role = 'admin';
       }
@@ -373,7 +404,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       
       console.log('[JWT] Final token state:', {
         hasUser: !!token.user,
-        email: token.user?.email,
+        email: (token.user as any)?.email,
         role: token.role,
         isAdmin: token.isAdmin
       });
@@ -387,12 +418,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token?.user) {
         session.user = {
           ...session.user,
-          ...token.user
+          ...(token.user as any)
         };
       }
       // Add role and isAdmin flags to the session
-      session.user.isAdmin = token.isAdmin ?? false;
-      session.user.role = token.role ?? 'viewer';
+      session.user.isAdmin = (token.isAdmin as boolean) ?? false;
+      session.user.role = (token.role as string) ?? 'viewer';
       
       return session;
     },
