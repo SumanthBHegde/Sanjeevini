@@ -134,6 +134,13 @@ export default function Navbar() {
                                             Your Profile
                                         </Link>
                                         <Link
+                                            href="/contributions"
+                                            className="block px-4 py-2.5 text-sm nav-text hover:bg-[var(--color-bg-card)] hover:text-[var(--color-bg-accent)] transition-colors"
+                                            onClick={() => setDropdownOpen(false)}
+                                        >
+                                            Contributions
+                                        </Link>
+                                        <Link
                                             href="/user/plants"
                                             className="block px-4 py-2.5 text-sm nav-text hover:bg-[var(--color-bg-card)] hover:text-[var(--color-bg-accent)] transition-colors"
                                             onClick={() => setDropdownOpen(false)}

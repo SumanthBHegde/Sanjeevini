@@ -1,8 +1,10 @@
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import { auth } from "@/auth";
 
 type PlantDetailsProps = {
     plant: {
+        _id: string;
         name: string;
         scientificName?: string;
         description?: string;
@@ -14,15 +16,35 @@ type PlantDetailsProps = {
         cultivationTips?: string[];
         traditionalUses?: string[];
         conservationStatus?: string;
+        slug?: { current: string };
         [key: string]: unknown;
     };
 };
 
-export default function PlantDetails({ plant }: PlantDetailsProps) {
+export default async function PlantDetails({ plant }: PlantDetailsProps) {
+    const session = await auth();
+    const canEdit = session?.user && (session.user.role === 'admin' || session.user.role === 'editor');
+
     return (
         <section className="py-16 bg-[var(--color-home)]">
             <div className="max-w-5xl mx-auto px-4">
-                
+
+                {/* Edit Button for Editors/Admins */}
+                {canEdit && plant.slug?.current && (
+                    <div className="mb-6 flex justify-end">
+                        <Link
+                            href={`/plant/${plant.slug.current}/edit`}
+                            className="bg-[var(--color-bg-accent)] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity font-medium inline-flex items-center gap-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                            Edit Plant
+                        </Link>
+                    </div>
+                )}
+
                 {/* Quick Info Section */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     {plant.scientificName && (
@@ -31,14 +53,14 @@ export default function PlantDetails({ plant }: PlantDetailsProps) {
                             <p className="text-[var(--color-text-primary)] italic">{plant.scientificName}</p>
                         </div>
                     )}
-                    
+
                     {plant.category && (
                         <div className="bg-white rounded-lg p-6 shadow-sm border border-[var(--color-card-stroke-primary)]">
                             <p className="text-sm text-[var(--color-text-secondary)] mb-2 font-medium">Category</p>
                             <p className="text-[var(--color-text-primary)] capitalize">{plant.category}</p>
                         </div>
                     )}
-                    
+
                     {plant.region && (
                         <div className="bg-white rounded-lg p-6 shadow-sm border border-[var(--color-card-stroke-primary)]">
                             <p className="text-sm text-[var(--color-text-secondary)] mb-2 font-medium">Region</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePlantForm } from "@/hooks/use-plant-form";
+import { usePlantForm, PlantData } from "@/hooks/use-plant-form";
 import { FormInput, FormTextarea, FormSelect, ErrorMessage } from "@/components/ui/form-fields";
 import { ImageUpload } from "@/components/forms/ImageUpload";
 import { MarkdownEditor } from "@/components/forms/MarkdownEditor";
@@ -12,7 +12,12 @@ import {
   FORM_HELPER_TEXTS
 } from "@/components/forms/plant-form-config";
 
-export default function CreatePlantForm() {
+interface CreatePlantFormProps {
+  plant?: PlantData;
+  isEditing?: boolean;
+}
+
+export default function CreatePlantForm({ plant, isEditing = false }: CreatePlantFormProps) {
   const {
     state,
     formAction,
@@ -23,7 +28,12 @@ export default function CreatePlantForm() {
     handleSubmit,
     handleImageUpload,
     clearImage,
-  } = usePlantForm();
+  } = usePlantForm({ initialData: plant, isEditing });
+
+  // Convert arrays back to newline-separated strings for textarea pre-population
+  const medicinalPropsString = plant?.medicinalProperties?.join('\n') || '';
+  const cultivationTipsString = plant?.cultivationTips?.join('\n') || '';
+  const traditionalUsesString = plant?.traditionalUses?.join('\n') || '';
 
   return (
     <form action={formAction} className="space-y-6" onSubmit={handleSubmit}>
@@ -34,11 +44,12 @@ export default function CreatePlantForm() {
         <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
           Basic Information
         </h3>
-        
+
         <FormInput
           label={FORM_FIELD_LABELS.name}
           id="name"
           placeholder={FORM_PLACEHOLDERS.name}
+          defaultValue={plant?.name}
           required
         />
 
@@ -46,6 +57,7 @@ export default function CreatePlantForm() {
           label={FORM_FIELD_LABELS.scientificName}
           id="scientificName"
           placeholder={FORM_PLACEHOLDERS.scientificName}
+          defaultValue={plant?.scientificName}
         />
 
         <FormTextarea
@@ -53,6 +65,7 @@ export default function CreatePlantForm() {
           id="description"
           placeholder={FORM_PLACEHOLDERS.description}
           rows={3}
+          defaultValue={plant?.description}
           required
         />
       </section>
@@ -62,7 +75,7 @@ export default function CreatePlantForm() {
         <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
           Detailed Content
         </h3>
-        
+
         <MarkdownEditor
           value={detailedDescription}
           onChange={setDetailedDescription}
@@ -74,7 +87,7 @@ export default function CreatePlantForm() {
         <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
           Image
         </h3>
-        
+
         <ImageUpload
           imageUrl={imageUrl}
           onImageUpload={handleImageUpload}
@@ -87,11 +100,12 @@ export default function CreatePlantForm() {
         <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
           Classification & Location
         </h3>
-        
+
         <FormSelect
           label={FORM_FIELD_LABELS.category}
           id="category"
           options={PLANT_CATEGORIES}
+          defaultValue={plant?.category}
           required
         />
 
@@ -99,6 +113,7 @@ export default function CreatePlantForm() {
           label={FORM_FIELD_LABELS.region}
           id="region"
           placeholder={FORM_PLACEHOLDERS.region}
+          defaultValue={plant?.region}
           required
         />
 
@@ -106,6 +121,7 @@ export default function CreatePlantForm() {
           label={FORM_FIELD_LABELS.conservationStatus}
           id="conservationStatus"
           options={CONSERVATION_STATUS_OPTIONS}
+          defaultValue={plant?.conservationStatus}
         />
       </section>
 
@@ -114,13 +130,14 @@ export default function CreatePlantForm() {
         <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
           Properties & Uses
         </h3>
-        
+
         <FormTextarea
           label={FORM_FIELD_LABELS.medicinalProperties}
           id="medicinalProperties"
           placeholder={FORM_PLACEHOLDERS.medicinalProperties}
           helperText={FORM_HELPER_TEXTS.medicinalProperties}
           rows={3}
+          defaultValue={medicinalPropsString}
         />
 
         <FormTextarea
@@ -129,6 +146,7 @@ export default function CreatePlantForm() {
           placeholder={FORM_PLACEHOLDERS.cultivationTips}
           helperText={FORM_HELPER_TEXTS.cultivationTips}
           rows={3}
+          defaultValue={cultivationTipsString}
         />
 
         <FormTextarea
@@ -137,6 +155,7 @@ export default function CreatePlantForm() {
           placeholder={FORM_PLACEHOLDERS.traditionalUses}
           helperText={FORM_HELPER_TEXTS.traditionalUses}
           rows={3}
+          defaultValue={traditionalUsesString}
         />
       </section>
 
@@ -147,7 +166,10 @@ export default function CreatePlantForm() {
           className="submit_button w-full"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Plant'}
+          {isSubmitting
+            ? (isEditing ? 'Updating...' : 'Submitting...')
+            : (isEditing ? 'Update Plant' : 'Submit Plant')
+          }
         </button>
       </div>
     </form>
