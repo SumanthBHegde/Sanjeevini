@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 // Import the markdown editor dynamically to prevent SSR issues
 const SimpleMdeEditor = dynamic(() => import("react-simplemde-editor"), {
@@ -34,10 +34,20 @@ export const MarkdownEditor = ({
         setIsClient(true);
     }, []);
 
-    // Memoize the onChange handler to prevent re-renders
-    const handleChange = useCallback((newValue: string) => {
-        onChange(newValue);
-    }, [onChange]);
+    // Memoize the options to prevent re-renders
+    const editorOptions = useMemo(() => ({
+        placeholder,
+        spellChecker: false,
+        autofocus: false,
+        status: false,
+        toolbar: [
+            "bold", "italic", "heading", "|",
+            "quote", "unordered-list", "ordered-list", "|",
+            "link", "image", "|",
+            "preview", "side-by-side", "fullscreen", "|",
+            "guide"
+        ] as const
+    }), [placeholder]);
 
     if (!isClient) {
         return (
@@ -62,20 +72,8 @@ export const MarkdownEditor = ({
             <div className="border border-gray-300 rounded-md overflow-hidden">
                 <SimpleMdeEditor
                     value={value}
-                    onChange={handleChange}
-                    options={{
-                        placeholder,
-                        spellChecker: false,
-                        autofocus: false,
-                        status: false,
-                        toolbar: [
-                            "bold", "italic", "heading", "|",
-                            "quote", "unordered-list", "ordered-list", "|",
-                            "link", "image", "|",
-                            "preview", "side-by-side", "fullscreen", "|",
-                            "guide"
-                        ]
-                    }}
+                    onChange={onChange}
+                    options={editorOptions}
                 />
             </div>
             {helperText && (
