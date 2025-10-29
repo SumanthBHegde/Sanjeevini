@@ -1,11 +1,27 @@
 import CreatePlantForm from "@/components/forms/CreatePlantForm";
 import CreatePlantHero from "@/components/plants/CreatePlantHero";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
 
-export default function CreatePlantPage() {
+export default async function CreatePlantPage() {
+    const session = await auth();
+    
+    // Check if user is logged in
+    if (!session?.user) {
+        redirect("/sign-in");
+    }
+    
+    // Check if user has editor or admin role
+    const canCreate = session.user.role === 'admin' || session.user.role === 'editor';
+    
+    if (!canCreate) {
+        redirect("/");
+    }
+    
     return (
         <>
             <CreatePlantHero />

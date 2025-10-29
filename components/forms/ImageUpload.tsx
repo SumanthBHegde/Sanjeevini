@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
+import { useState, useRef } from "react";
 
 interface ImageUploadProps {
     imageUrl: string;
-    onImageUpload: (result: CloudinaryUploadWidgetResults) => void;
+    onImageUpload: (url: string) => void;
     onClearImage: () => void;
     label?: string;
 }
@@ -16,6 +16,51 @@ export const ImageUpload = ({
     onClearImage,
     label = "PLANT IMAGE"
 }: ImageUploadProps) => {
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file');
+            return;
+        }
+
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size must be less than 10MB');
+            return;
+        }
+
+        setIsUploading(true);
+
+        try {
+            // Upload to Sanity
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/api/upload-image', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+
+            const data = await response.json();
+            onImageUpload(data.url);
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Failed to upload image. Please try again.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     return (
         <div>
             <label className="form_label">{label}</label>
@@ -54,23 +99,26 @@ export const ImageUpload = ({
                             />
                         </svg>
                         <p className="mt-2 text-sm text-gray-600">Upload a high-quality image of the plant</p>
+                        <p className="mt-1 text-xs text-gray-500">Max size: 10MB (JPG, PNG, WebP)</p>
                     </div>
                 )}
 
-                <CldUploadWidget
-                    uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "sanjeevini_plants"}
-                    onSuccess={onImageUpload}
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                />
+
+                <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                    className="bg-[var(--color-bg-accent-light)] text-[var(--color-bg-accent)] font-medium py-2 px-4 rounded-md hover:bg-[var(--color-bg-accent)] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {({ open }) => (
-                        <button
-                            type="button"
-                            onClick={() => open()}
-                            className="bg-[var(--color-bg-accent-light)] text-[var(--color-bg-accent)] font-medium py-2 px-4 rounded-md hover:bg-[var(--color-bg-accent)] hover:text-white transition-colors"
-                        >
-                            {imageUrl ? "Replace Image" : "Upload Image"}
-                        </button>
-                    )}
-                </CldUploadWidget>
+                    {isUploading ? "Uploading..." : imageUrl ? "Replace Image" : "Upload Image"}
+                </button>
             </div>
 
             {/* Hidden input field to store the image URL */}

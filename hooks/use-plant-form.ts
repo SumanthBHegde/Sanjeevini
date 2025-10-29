@@ -4,7 +4,6 @@ import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
 import { createPlant } from "@/lib/actions";
-import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 
 export interface PlantFormData {
   name: string;
@@ -59,11 +58,8 @@ export const usePlantForm = () => {
   };
 
   // Handle successful image upload
-  const handleImageUpload = (result: CloudinaryUploadWidgetResults) => {
-    if (result.info && typeof result.info === 'object' && 'secure_url' in result.info) {
-      const url = result.info.secure_url as string;
-      setImageUrl(url);
-    }
+  const handleImageUpload = (url: string) => {
+    setImageUrl(url);
   };
 
   const clearImage = () => {
