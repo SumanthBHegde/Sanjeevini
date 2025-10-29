@@ -9,19 +9,19 @@ export const dynamic = 'force-dynamic';
 
 export default async function CreatePlantPage() {
     const session = await auth();
-    
+
     // Check if user is logged in
     if (!session?.user) {
         redirect("/sign-in");
     }
-    
+
     // Check if user has editor or admin role
     const canCreate = session.user.role === 'admin' || session.user.role === 'editor';
-    
+
     if (!canCreate) {
         redirect("/");
     }
-    
+
     return (
         <>
             <CreatePlantHero />

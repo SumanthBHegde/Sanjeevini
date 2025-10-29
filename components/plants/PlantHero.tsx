@@ -6,47 +6,59 @@ type PlantHeroProps = {
 };
 
 const PlantHero = ({ plant }: PlantHeroProps) => {
+    // Format date - should always exist from creation
     const formattedDate = plant.publishedAt
         ? new Date(plant.publishedAt).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         })
-        : "Unknown Date";
+        : new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
 
     return (
-        <section className="relative w-full min-h-[300px] flex flex-col items-center justify-center text-white overflow-hidden">
-            {/* Hero Background Image */}
+        <section className="relative w-full h-[450px] flex flex-col items-center justify-end overflow-hidden">
+            {/* Plant Image as Background */}
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="/hero7.webp"
-                    alt="Plant species backdrop"
+                    src={plant.mainImage || "/hero1.webp"}
+                    alt={plant.name}
                     fill
-                    className="object-cover brightness-[0.6]"
+                    className="object-cover brightness-[0.5]"
                     priority
                 />
             </div>
 
-            <div className="relative z-10 w-full max-w-5xl mx-auto px-4 py-12 text-center">
-                {/* Date Badge */}
-                <div className="badge-secondary mb-6 inline-block">
-                    {formattedDate}
-                </div>
+            {/* Gradient Overlay for better text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-[1]"></div>
+
+            <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pb-10">
+                {/* Date */}
+                <p className="text-sm text-white/90 mb-3">
+                    Published: {formattedDate}
+                </p>
 
                 {/* Plant Name */}
-                <h1 className="heading text-white mb-4">
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
                     {plant.name}
                 </h1>
 
                 {/* Scientific Name */}
-                <p className="sub-heading text-[var(--color-text-secondary-accent)] mb-6 italic">
-                    {plant.scientificName}
-                </p>
+                {plant.scientificName && (
+                    <p className="text-xl text-white/95 italic mb-4">
+                        {plant.scientificName}
+                    </p>
+                )}
 
                 {/* Description */}
-                <p className="body-text-white mb-8 max-w-3xl mx-auto">
-                    {plant.description}
-                </p>
+                {plant.description && (
+                    <p className="text-base text-white/90 max-w-3xl line-clamp-2">
+                        {plant.description}
+                    </p>
+                )}
             </div>
         </section>
     );
