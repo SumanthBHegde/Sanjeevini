@@ -19,15 +19,26 @@ export async function middleware(req: NextRequest) {
 
   // For admin routes, check if user has admin role
   if (isAdminPath) {
+    console.log('[Middleware] Admin path accessed:', pathname);
+    console.log('[Middleware] Token exists:', !!token);
+    console.log('[Middleware] Token role:', token?.role);
+    console.log('[Middleware] Token isAdmin:', token?.isAdmin);
+    console.log('[Middleware] Token user:', token?.user);
+    
     // Check if user is an admin (either by role or legacy isAdmin flag)
     const isAdmin = token?.role === 'admin' || token?.isAdmin === true;
     
+    console.log('[Middleware] Is admin check result:', isAdmin);
+    
     if (!isAdmin) {
+      console.log('[Middleware] Access denied - redirecting to sign-in');
       // Redirect non-admins away from admin pages
       const redirectUrl = new URL("/sign-in", req.url);
       redirectUrl.searchParams.set("error", "AccessDenied");
       return NextResponse.redirect(redirectUrl);
     }
+    
+    console.log('[Middleware] Access granted - proceeding to admin page');
   }
 
   // For content creation/editing routes, check if user has admin or editor role
