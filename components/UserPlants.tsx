@@ -19,9 +19,7 @@ const UserPlants = ({ id, showAddButton = false }: UserPlantsProps) => {
     useEffect(() => {
         const fetchUserPlants = async () => {
             try {
-                console.log('Fetching plants for user ID:', id);
                 const plants = await client.fetch(PLANTS_BY_AUTHOR_QUERY, { id });
-                console.log('Fetched plants:', plants);
                 setUserPlants(plants || []);
             } catch (error) {
                 console.error("Error fetching user plants:", error);

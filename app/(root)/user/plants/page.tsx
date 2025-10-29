@@ -13,7 +13,7 @@ function UserPlantsContent() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (status === "authenticated" && session?.id) {
+        if (status === "authenticated" && session?.user?.id) {
             setIsLoading(false);
         } else if (status === "unauthenticated") {
             router.push("/sign-in");
@@ -48,8 +48,10 @@ function UserPlantsContent() {
                     </Link>
                 </div>
 
-                {session?.id && (
-                    <UserPlants id={session.id} showAddButton={true} />
+                {session?.user?.id && (
+                    <div className="card_grid">
+                        <UserPlants id={session.user.id} showAddButton={true} />
+                    </div>
                 )}
 
                 <div className="mt-10 text-center">

@@ -10,8 +10,8 @@ function ProfileRedirectContent() {
     const router = useRouter();
 
     useEffect(() => {
-        if (status === "authenticated" && session?.id) {
-            router.push(`/user/${session.id}`);
+        if (status === "authenticated" && session?.user?.id) {
+            router.push(`/user/${session.user.id}`);
         } else if (status === "unauthenticated") {
             router.push("/sign-in");
         }

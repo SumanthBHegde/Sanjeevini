@@ -36,7 +36,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   if (!user) return notFound();
 
   // Check if current user is the profile owner or an admin
-  const isOwner = session?.id === id;
+  const isOwner = session?.user?.id === id;
   const isAdmin = session?.user?.role === 'admin' || session?.user?.isAdmin === true;
   const isEditor = user.role === 'editor';
 
