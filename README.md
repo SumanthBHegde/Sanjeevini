@@ -1,7 +1,7 @@
 # Sanjeevini
 <div align="center">
   <br />
-    <a href="https://sanjeevini.vercel.app" target="_blank">
+    <a href="https://sanjeevini-zeta.vercel.app/" target="_blank">
       <img src="https://raw.githubusercontent.com/SumanthBHegde/Sanjeevini/main/public/sanjivini_hero.webp" alt="Sanjeevini Project Banner">
     </a>
   <br />
