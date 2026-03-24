@@ -1,7 +1,8 @@
+# Sanjeevini
 <div align="center">
   <br />
-    <a href="#" target="_blank">
-      <img src="d:\Own Projects\Sanjeevini\public\sanjivini_hero.jpg" alt="Sanjeevini Project Banner">
+    <a href="https://sanjeevini.vercel.app" target="_blank">
+      <img src="https://raw.githubusercontent.com/SumanthBHegde/Sanjeevini/main/public/sanjivini_hero.webp" alt="Sanjeevini Project Banner">
     </a>
   <br />
 
