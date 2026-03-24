@@ -1,7 +1,7 @@
 <div align="center">
   <br />
-    <a href="#" target="_blank">
-      <img src="d:\Own Projects\Sanjeevini\public\sanjivini_hero.jpg" alt="Sanjeevini Project Banner">
+    <a href="https://sanjeevini.vercel.app" target="_blank">
+      <img src="https://raw.githubusercontent.com/SumanthBHegde/Sanjeevini/main/public/sanjivini_hero.webp" alt="Sanjeevini Project Banner">
     </a>
   <br />
 
@@ -11,6 +11,12 @@
     <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" />
     <img src="https://img.shields.io/badge/-Sanity-black?style=for-the-badge&logoColor=white&logo=sanity&color=F03E2F" alt="sanity" />
   </div>
+
+  <br />
+
+  <a href="https://sanjeevini.vercel.app" target="_blank">
+    <img src="https://img.shields.io/badge/🌿_Live_Demo-Sanjeevini-4CAF50?style=for-the-badge" alt="Live Demo" />
+  </a>
 
 <h3 align="center">Medicinal Plants Directory Platform</h3>
 
