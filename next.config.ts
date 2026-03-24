@@ -45,7 +45,6 @@ const nextConfig: NextConfig = {
     unoptimized: false, // Keep general optimization on, we'll handle Google images specifically in the UserAvatar component
   },
   experimental: {
-    ppr: "incremental",
     after: true,
   },
   transpilePackages: ['next-auth'],
