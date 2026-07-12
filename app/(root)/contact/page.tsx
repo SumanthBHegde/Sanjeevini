@@ -53,7 +53,7 @@ export default function ContactPage() {
                             {/* Social Links */}
                             <div className="flex justify-center gap-6 py-8">
                                 <Link
-                                    href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9"
+                                    href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9/"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center justify-center w-14 h-14 rounded-full bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] transition-all duration-200 hover:scale-110"

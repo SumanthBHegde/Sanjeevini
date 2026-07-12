@@ -121,7 +121,7 @@ export default function Footer() {
                         </h4>
                         <div className="flex gap-4 mb-6">
                             <Link
-                                href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9"
+                                href="https://www.linkedin.com/in/sumanth-hegde-37805a2b9/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-white/80 hover:text-white hover:scale-110 transition-all duration-200"
