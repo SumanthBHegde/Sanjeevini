@@ -20,6 +20,31 @@
    </div>
 </div>
 
+## 📸 Screenshots
+
+### Home — "Nature's Backpack"
+Hero with species search, category cards (Medicinal · Culinary · Ornamental · Endangered), and a
+grid of recommended plants pulled live from Sanity, each with contributor and date.
+
+![Home page](./screenshots/01-home.png)
+
+### Explore plants
+Searchable directory of all catalogued plants with images, scientific names, categories, and a
+contributor flow ("Add New Plant").
+
+![Plants directory](./screenshots/02-plants.png)
+
+### Plant detail
+Rich per-plant page: botanical features, health benefits, habitat, medicinal properties,
+traditional uses, a cultivation guide, conservation status, and "similar plants".
+
+![Plant detail](./screenshots/03-plant-detail.png)
+
+### Medicinal collection
+Curated view of medicinal species and their traditional uses.
+
+![Medicinal plants](./screenshots/04-medicinal.png)
+
 ## 📋 <a name="table">Table of Contents</a>
 
 1. 🤖 [Introduction](#introduction)
