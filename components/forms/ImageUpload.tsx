@@ -29,9 +29,9 @@ export const ImageUpload = ({
             return;
         }
 
-        // Validate file size (max 10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            alert('File size must be less than 10MB');
+        // Validate file size (max 4MB - Vercel's serverless function body limit is 4.5MB)
+        if (file.size > 4 * 1024 * 1024) {
+            alert('File size must be less than 4MB');
             return;
         }
 
@@ -47,15 +47,16 @@ export const ImageUpload = ({
                 body: formData,
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error('Upload failed');
+                throw new Error(data.error || 'Upload failed');
             }
 
-            const data = await response.json();
             onImageUpload(data.url);
         } catch (error) {
             console.error('Error uploading image:', error);
-            alert('Failed to upload image. Please try again.');
+            alert(error instanceof Error ? error.message : 'Failed to upload image. Please try again.');
         } finally {
             setIsUploading(false);
         }
@@ -99,7 +100,7 @@ export const ImageUpload = ({
                             />
                         </svg>
                         <p className="mt-2 text-sm text-gray-600">Upload a high-quality image of the plant</p>
-                        <p className="mt-1 text-xs text-gray-500">Max size: 10MB (JPG, PNG, WebP)</p>
+                        <p className="mt-1 text-xs text-gray-500">Max size: 4MB (JPG, PNG, WebP)</p>
                     </div>
                 )}
 

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeClient } from "@/sanity/lib/write-client";
 
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -31,7 +33,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error uploading image:", error);
     return NextResponse.json(
-      { error: "Failed to upload image" },
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to upload image",
+      },
       { status: 500 }
     );
   }
