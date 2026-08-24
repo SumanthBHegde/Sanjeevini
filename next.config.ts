@@ -44,15 +44,10 @@ const nextConfig: NextConfig = {
     // Disable remote image optimization for Google user content to avoid timeouts
     unoptimized: false, // Keep general optimization on, we'll handle Google images specifically in the UserAvatar component
   },
-  experimental: {
-    ppr: "incremental",
-    after: true,
-  },
+  experimental: {},
   transpilePackages: ['next-auth'],
   devIndicators: {
-    appIsrStatus: true,
-    buildActivity: true,
-    buildActivityPosition: "bottom-right",
+    position: "bottom-right",
   },
 };
 
